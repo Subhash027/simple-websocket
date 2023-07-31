@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>websocket-application</title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+
+        // Connect the websocket connections to the server
+        const socket = new WebSocket('ws://localhost:8080/ws');
+        console.log("Socket Object:: ", socket);
+        var stompClient = Stomp.over(socket);
+        console.log("stompClient Object:: ", socket);
+        //
+        stompClient.connect({}, function () {
+                    stompClient.subscribe('/topic/notifications', function (message) {
+                        console.log("Message Content::", message);
+                        displayMessage(message);
+                    });
+        });
+        //
+        function sendNotification() {
+            var message = document.getElementById("message").value;
+            stompClient.send("/app/sendNotification", {}, message);
+        }    
+        function displayMessage(messageOutput) {
+                var response = document.getElementById('chats');
+                var p = document.createElement('p');
+                p.style.wordWrap = 'break-word';
+                p.appendChild(document.createTextNode(messageOutput.command + ": " + messageOutput.body));
+                response.appendChild(p);
+            }
+    </script>
+    <link rel="stylesheet" href="index.css" type="text/css">
+</head>
+<body>
+    <div id="container">
+        <header>
+            <h1>PUSH SERVICE</h1>
+        </header>
+        <div id="chat-content">
+            <span id="chats"></span>
+            <form>
+                <div id="chat-content-actions">
+                    <div class="message-content">
+                        <label for="message"> 
+                            <input type="text" id="message" name="message" placeholder="Enter your message">
+                        </label>
+                    </div>
+                    <div class="send-button">
+                        <label for="send">
+                            <input type="button" name="send-notification-button" id="send" value="Send" onclick="sendNotification()"> 
+                        </label>
+                    </div> 
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

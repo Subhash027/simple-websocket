@@ -15,6 +15,8 @@ This project is a simple web chat application that enables real-time communicati
 
 ## Getting Started
 
+Application : Server is configuration on localhost 8080 
+
 ### Prerequisites
 - Java JDK 8 or later
 - Maven

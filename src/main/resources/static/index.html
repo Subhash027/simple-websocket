@@ -3,8 +3,7 @@
 <head>
     <title>websocket-application</title>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -12,21 +11,26 @@
 
         // Connect the websocket connections to the server
         const socket = new WebSocket('ws://localhost:8080/ws');
+        
         console.log("Socket Object:: ", socket);
-        var stompClient = Stomp.over(socket);
+        var stompClient = Stomp.over(socket); // STOMP (Simple Text Oriented Messaging Protocol) is a simple, text-based protocol designed for messaging between clients and message brokers
         console.log("stompClient Object:: ", socket);
-        //
+
+        // Receive the notification from the server
         stompClient.connect({}, function () {
                     stompClient.subscribe('/topic/notifications', function (message) {
                         console.log("Message Content::", message);
                         displayMessage(message);
                     });
         });
-        //
+    
+        // Send notification to service side 
         function sendNotification() {
             var message = document.getElementById("message").value;
             stompClient.send("/app/sendNotification", {}, message);
         }    
+
+        // Display message to client 
         function displayMessage(messageOutput) {
                 var response = document.getElementById('chats');
                 var p = document.createElement('p');
